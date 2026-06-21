@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AppShell extends StatelessWidget {
   const AppShell({
@@ -14,49 +15,109 @@ class AppShell extends StatelessWidget {
   final Widget child;
 
   static const _items = [
-    ('Dashboard', '/dashboard', Icons.dashboard_rounded),
-    ('Expenses', '/expenses', Icons.receipt_long_rounded),
-    ('Calendar', '/calendar', Icons.calendar_month_rounded),
-    ('Budget', '/budget', Icons.account_balance_wallet_rounded),
-    ('Reimburse', '/reimbursements', Icons.payments_rounded),
-    ('Analytics', '/analytics', Icons.pie_chart_rounded),
+    (
+    'Dashboard',
+    '/dashboard',
+    LucideIcons.layoutDashboard,
+    ),
+    (
+    'Expenses',
+    '/expenses',
+    LucideIcons.receipt,
+    ),
+    (
+    'Analytics',
+    '/analytics',
+    LucideIcons.chartPie,
+    ),
+    (
+    'More',
+    '/more',
+    LucideIcons.menu,
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
+
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 22,
-            ),
+      appBar: AppBar(
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 22,
           ),
         ),
 
-    body: child,
+        actions: [
+          IconButton(
+            tooltip: 'Theme',
+            onPressed: () {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Dark mode toggle coming in Phase 4B',
+                  ),
+                ),
+              );
+            },
+            icon: Icon(
+              isDark
+                  ? LucideIcons.sun
+                  : LucideIcons.moon,
+            ),
+          ),
 
-    bottomNavigationBar: NavigationBar(
-        selectedIndex: currentIndex,
+          const SizedBox(width: 8),
+        ],
+      ),
 
-        labelBehavior:
-        NavigationDestinationLabelBehavior.onlyShowSelected,
+      body: child,
 
-        onDestinationSelected: (index) {
-      context.go(_items[index].$2);
-    },
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.fromLTRB(
+          12,
+          0,
+          12,
+          12,
+        ),
+        child: ClipRRect(
+          borderRadius:
+          BorderRadius.circular(24),
+          child: NavigationBar(
+            selectedIndex: currentIndex,
+              labelBehavior:NavigationDestinationLabelBehavior.alwaysShow,
 
-    destinations: _items
-        .map(
-    (item) => NavigationDestination(
-    icon: Icon(item.$3),
-    label: item.$1,
-    ),
-    )
-        .toList(),
-    ),
+            onDestinationSelected: (index) {
+              context.go(
+                _items[index].$2,
+              );
+            },
+
+            destinations: _items
+                .map(
+                  (item) =>
+                  NavigationDestination(
+                    icon: Icon(
+                      item.$3,
+                      color: Colors.grey,
+                    ),
+                    selectedIcon: Icon(
+                      item.$3,
+                      color: Colors.white,
+                    ),
+                    label: item.$1,
+                  ),
+            )
+                .toList(),
+          ),
+        ),
+      ),
     );
-
   }
 }

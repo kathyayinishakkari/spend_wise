@@ -22,46 +22,108 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     final selectedExpenses = expenses.where((e) => _selectedDay != null && isSameDay(e.dateTime, _selectedDay)).toList();
 
     return AppShell(
-      currentIndex: 2,
+      currentIndex: 3,
       title: 'Calendar',
       child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Card(
-            child: TableCalendar(
-              firstDay: DateTime.utc(2020),
-              lastDay: DateTime.utc(2100),
-              focusedDay: _focusedDay,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              eventLoader: (day) => expenses.where((e) => isSameDay(e.dateTime, day)).toList(),
-              onDaySelected: (selected, focused) => setState(() {
-                _selectedDay = selected;
-                _focusedDay = focused;
-              }),
-            ),
-          ),
-          const SizedBox(height: 12),
-          FilledButton.icon(
-            onPressed: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (_) => const ExpenseFormSheet(),
-            ),
-            icon: const Icon(Icons.add),
-            label: const Text('Add expense for selected date'),
-          ),
-          const SizedBox(height: 12),
-          ...selectedExpenses.map(
-                (e) => Card(
-              child: ListTile(
-                title: Text(e.category.name),
-                subtitle: Text(e.description ?? ''),
-                trailing: Text(e.amount.toStringAsFixed(2)),
-              ),
-            ),
-          ),
-        ],
+          padding: const EdgeInsets.all(20),
+          children: [
+      Card(
+      child: Padding(
+      padding: const EdgeInsets.all(12),
+      child: TableCalendar(
+        firstDay: DateTime.utc(2020),
+        lastDay: DateTime.utc(2100),
+        focusedDay: _focusedDay,
+        selectedDayPredicate: (day) =>
+            isSameDay(_selectedDay, day),
+        eventLoader: (day) => expenses
+            .where((e) =>
+            isSameDay(
+              e.dateTime,
+              day,
+            ))
+            .toList(),
+        onDaySelected:
+            (selected, focused) =>
+            setState(() {
+              _selectedDay = selected;
+              _focusedDay = focused;
+            }),
       ),
+    ),
+    ),
+
+    const SizedBox(height: 16),
+
+    FilledButton.icon(
+    onPressed: () =>
+    showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (_) =>
+    const ExpenseFormSheet(),
+    ),
+    icon: const Icon(Icons.add),
+    label: const Text(
+    'Add Expense',
+    ),
+    ),
+
+    const SizedBox(height: 20),
+
+    Card(
+    child: Padding(
+    padding: const EdgeInsets.all(18),
+    child: Column(
+    crossAxisAlignment:
+    CrossAxisAlignment.start,
+    children: [
+    const Text(
+    'Selected Date',
+    ),
+    const SizedBox(height: 8),
+    Text(
+    _selectedDay
+        ?.toString()
+        .split(' ')
+        .first ??
+    '',
+    style: const TextStyle(
+    fontWeight:
+    FontWeight.bold,
+    fontSize: 18,
+    ),
+    ),
+    ],
+    ),
+    ),
+    ),
+
+    const SizedBox(height: 16),
+
+    ...selectedExpenses.map(
+    (e) => Card(
+    child: ListTile(
+    leading: const Icon(
+    Icons.receipt_long_rounded,
+    ),
+    title: Text(
+    e.category.name,
+    ),
+    subtitle: Text(
+    e.description ?? '',
+    ),
+    trailing: Text(
+    '₹${e.amount.toStringAsFixed(0)}',
+    ),
+    ),
+    ),
+    ),
+
+    ],
+    )
+
     );
   }
 }
