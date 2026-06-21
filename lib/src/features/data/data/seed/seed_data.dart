@@ -1,0 +1,45 @@
+const sampleSeedData = {
+  'users/demo-user': {
+    'createdAt': '2026-06-01T08:00:00Z',
+    'anonymous': true,
+    'fcmEnabled': true,
+  },
+  'users/demo-user/budgets/2026-06': {
+    'userId': 'demo-user',
+    'monthKey': '2026-06',
+    'amount': 35000,
+    'createdAt': '2026-06-01T08:00:00Z',
+  },
+  'users/demo-user/expenses/exp-1': {
+    'userId': 'demo-user',
+    'amount': 450,
+    'category': 'food',
+    'paymentMethod': 'upi',
+    'expenseType': 'personal',
+    'dateTime': '2026-06-03T08:30:00Z',
+  },
+  'users/demo-user/expenses/exp-2': {
+    'userId': 'demo-user',
+    'amount': 1800,
+    'category': 'shopping',
+    'paymentMethod': 'card',
+    'expenseType': 'reimbursable',
+    'owedBy': 'friend',
+    'reimbursementId': 'rem-1',
+    'dateTime': '2026-06-05T15:10:00Z',
+  },
+  'users/demo-user/reimbursements/rem-1': {
+    'userId': 'demo-user',
+    'expenseId': 'exp-2',
+    'totalAmount': 1800,
+    'receivedAmount': 600,
+    'status': 'partial',
+    'owedBy': 'friend',
+    'createdAt': '2026-06-05T15:10:00Z',
+  },
+  'users/demo-user/settings/app': {
+    'budgetAlerts': [80, 95, 100],
+    'dailyReminderHour': 20,
+    'pendingReimbursementReminderEnabled': true,
+  },
+};
