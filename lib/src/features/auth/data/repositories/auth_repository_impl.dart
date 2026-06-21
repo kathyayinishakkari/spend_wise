@@ -1,4 +1,4 @@
-// auth_repository_impl.dart
+// lib/src/features/auth/data/repositories/auth_repository_impl.dart
 import 'package:expense_tracker_app/src/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:expense_tracker_app/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,8 +14,12 @@ class AuthRepositoryImpl implements AuthRepository {
   User? get currentUser => _remote.currentUser;
 
   @override
-  Future<void> signInAnonymously() async => _remote.signInAnonymously();
+  Future<void> signInAnonymously() async {
+    await _remote.signInAnonymously();
+  }
 
   @override
-  Future<void> signOut() => _remote.signOut();
+  Future<void> signOut() async {
+    await _remote.signOut();
+  }
 }

@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 class ReimbursementsPage extends StatelessWidget {
   const ReimbursementsPage({super.key});
 
-  List<Reimbursement> _sampleData() => const [
-    Reimbursement(
+  List<Reimbursement> _sampleData() => [
+     Reimbursement(
       id: 'r1',
       userId: 'demo-user',
       expenseId: 'e1',
@@ -17,7 +17,7 @@ class ReimbursementsPage extends StatelessWidget {
       owedBy: OwedBy.friend,
       createdAt: DateTime(2026, 6, 5),
     ),
-    Reimbursement(
+     Reimbursement(
       id: 'r2',
       userId: 'demo-user',
       expenseId: 'e2',
@@ -27,7 +27,7 @@ class ReimbursementsPage extends StatelessWidget {
       owedBy: OwedBy.mom,
       createdAt: DateTime(2026, 6, 10),
     ),
-    Reimbursement(
+     Reimbursement(
       id: 'r3',
       userId: 'demo-user',
       expenseId: 'e3',
@@ -109,7 +109,9 @@ class _StatusSection extends StatelessWidget {
                 (item) => Card(
               child: ListTile(
                 title: Text(item.owedBy.name.toUpperCase()),
-                subtitle: Text('Total: ${item.totalAmount.toStringAsFixed(2)} • Received: ${item.receivedAmount.toStringAsFixed(2)}'),
+                subtitle: Text(
+                  'Total: ${item.totalAmount.toStringAsFixed(2)} • Received: ${item.receivedAmount.toStringAsFixed(2)}',
+                ),
                 trailing: Text(item.pendingAmount.toStringAsFixed(2)),
               ),
             ),

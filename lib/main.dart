@@ -7,4 +7,4 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final container = await bootstrap();
   runApp(UncontrolledProviderScope(container: container, child: const ExpenseApp()));
-}3
+}
