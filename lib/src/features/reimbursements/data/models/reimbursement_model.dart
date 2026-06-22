@@ -10,7 +10,8 @@ class ReimbursementModel extends Reimbursement {
     required super.totalAmount,
     required super.receivedAmount,
     required super.status,
-    required super.owedBy,
+    required super.personName,
+    required super.source,
     required super.createdAt,
     super.settledAt,
   });
@@ -21,25 +22,42 @@ class ReimbursementModel extends Reimbursement {
     'totalAmount': totalAmount,
     'receivedAmount': receivedAmount,
     'status': status.name,
-    'owedBy': owedBy.name,
+    'personName': personName,
+    'source': source.name,
     'createdAt': Timestamp.fromDate(createdAt),
-    'settledAt': settledAt == null ? null : Timestamp.fromDate(settledAt!),
+    'settledAt':
+    settledAt == null
+        ? null
+        : Timestamp.fromDate(settledAt!),
   };
 
   factory ReimbursementModel.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> doc,
       ) {
     final data = doc.data()!;
+
     return ReimbursementModel(
       id: doc.id,
       userId: data['userId'] as String,
       expenseId: data['expenseId'] as String,
-      totalAmount: (data['totalAmount'] as num).toDouble(),
-      receivedAmount: (data['receivedAmount'] as num).toDouble(),
-      status: ReimbursementStatus.values.byName(data['status'] as String),
-      owedBy: OwedBy.values.byName(data['owedBy'] as String),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      settledAt: (data['settledAt'] as Timestamp?)?.toDate(),
+      totalAmount:
+      (data['totalAmount'] as num).toDouble(),
+      receivedAmount:
+      (data['receivedAmount'] as num).toDouble(),
+      status: ReimbursementStatus.values.byName(
+        data['status'] as String,
+      ),
+      personName:
+      data['personName'] as String,
+      source:
+      ReimbursementSource.values.byName(
+        data['source'] as String,
+      ),
+      createdAt:
+      (data['createdAt'] as Timestamp).toDate(),
+      settledAt:
+      (data['settledAt'] as Timestamp?)
+          ?.toDate(),
     );
   }
 }

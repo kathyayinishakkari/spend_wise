@@ -10,7 +10,8 @@ class Expense {
     required this.dateTime,
     required this.expenseType,
     this.description,
-    this.owedBy,
+    this.myShare,
+    this.personName,
     this.reimbursementId,
     this.createdAt,
     this.updatedAt,
@@ -24,8 +25,9 @@ class Expense {
   final PaymentMethod paymentMethod;
   final DateTime dateTime;
   final ExpenseType expenseType;
-  final OwedBy? owedBy;
+  final String? personName;
   final String? reimbursementId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final double? myShare;
 }

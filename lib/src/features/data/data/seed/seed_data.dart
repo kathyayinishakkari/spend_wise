@@ -23,7 +23,7 @@ const sampleSeedData = {
     'amount': 1800,
     'category': 'shopping',
     'paymentMethod': 'card',
-    'expenseType': 'reimbursable',
+    'expenseType': 'reimbursement',
     'owedBy': 'friend',
     'reimbursementId': 'rem-1',
     'dateTime': '2026-06-05T15:10:00Z',
