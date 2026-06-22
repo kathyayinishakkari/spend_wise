@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker_app/src/core/services/firebase_providers.dart';
 import 'package:expense_tracker_app/src/features/auth/presentation/providers/auth_providers.dart';
 import 'package:expense_tracker_app/src/features/budget/data/models/budget_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:expense_tracker_app/src/core/provider/date_provider.dart';
 import 'package:uuid/uuid.dart';
 
 final currentMonthBudgetProvider =
@@ -16,7 +16,7 @@ FutureProvider<BudgetModel?>((ref) async {
   final firestore =
   ref.watch(firestoreProvider);
 
-  final now = DateTime.now();
+  final now = ref.watch(currentDateProvider);
 
   final monthKey =
       '${now.year}-${now.month.toString().padLeft(2, '0')}';
@@ -59,7 +59,7 @@ Provider((ref) {
     final firestore =
     ref.read(firestoreProvider);
 
-    final now = DateTime.now();
+    final now = ref.watch(currentDateProvider);
 
     final monthKey =
         '${now.year}-${now.month.toString().padLeft(2, '0')}';
@@ -70,6 +70,8 @@ Provider((ref) {
       monthKey: monthKey,
       amount: amount,
       createdAt: now,
+      finalSpent: null,
+      monthClosed: false,
     );
 
     await firestore

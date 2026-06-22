@@ -1,6 +1,7 @@
 import 'package:expense_tracker_app/src/features/budget/presentation/providers/budget_providers.dart';
 import 'package:expense_tracker_app/src/features/expenses/presentation/providers/expense_providers.dart';
 import 'package:expense_tracker_app/src/features/reimbursements/domain/entities/reimbursement.dart';
+import 'package:expense_tracker_app/src/core/provider/date_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DashboardSummary {
@@ -42,7 +43,7 @@ Provider<AsyncValue<DashboardSummary>>(
 
     return expensesAsync.whenData(
           (expenses) {
-        final now = DateTime.now();
+        final now = ref.watch(currentDateProvider);
 
         final monthly = expenses.where(
               (e) =>

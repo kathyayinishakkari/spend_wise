@@ -52,7 +52,7 @@ class _DashboardPageState
                   gradient:
                   const LinearGradient(
                     colors: [
-                      Color(0xFF0F172A),
+                      Color(0xFF1E3A8A),
                       Color(0xFF1E293B),
                     ],
                   ),

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color primary = Color(0xFF0F172A);
+  static const Color primary = Color(0xFF1E3A8A);
   static const Color primaryDark = Color(0xFF1D4ED8);
 
-  static const Color secondary = Color(0xFFF59E0B);
+  static const Color secondary = Color(0xFF10B981);
 
   static const Color success = Color(0xFF16A34A);
-  static const Color warning = Color(0xFFF59E0B);
+  static const Color warning = Color(0xFF10B981);
   static const Color danger = Color(0xFFDC2626);
 
   static const Color lightBackground = Color(0xFFF8FAFC);
-  static const Color darkBackground = Color(0xFF0F172A);
+  static const Color darkBackground = Color(0xFF1E3A8A);
 
   static const Color cardBackground = Color(0xFFFFFFFF);
 
-  static const Color darkText = Color(0xFF0F172A);
+  static const Color darkText = Color(0xFF1E3A8A);
   static const Color mutedText = Color(0xFF64748B);
 
   static ThemeData light() => _theme(Brightness.light);
@@ -37,7 +37,7 @@ class AppTheme {
         : Colors.white,
     onSurface: isDark
     ? Colors.white
-        : const Color(0xFF0F172A),
+        : const Color(0xFF1E3A8A),
     );
 
     return ThemeData(

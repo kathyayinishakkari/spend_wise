@@ -5,6 +5,9 @@ class Budget {
     required this.monthKey,
     required this.amount,
     required this.createdAt,
+
+    this.finalSpent,
+    this.monthClosed = false,
   });
 
   final String id;
@@ -12,4 +15,7 @@ class Budget {
   final String monthKey;
   final double amount;
   final DateTime createdAt;
+
+  final double? finalSpent;
+  final bool monthClosed;
 }

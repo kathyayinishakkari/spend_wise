@@ -92,7 +92,7 @@ class _SummaryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
           colors: [
-            Color(0xFFF59E0B),
+            Color(0xFF10B981),
             Color(0xFFFBBF24),
           ],
         ),

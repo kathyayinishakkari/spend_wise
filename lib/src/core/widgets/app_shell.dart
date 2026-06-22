@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:expense_tracker_app/src/core/theme/theme_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AppShell extends StatelessWidget {
+class AppShell extends ConsumerWidget {
   const AppShell({
     super.key,
     required this.currentIndex,
@@ -38,11 +40,8 @@ class AppShell extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    final isDark =
-        Theme.of(context).brightness ==
-            Brightness.dark;
-
+  Widget build(BuildContext context, WidgetRef ref,) {
+    final isDark =Theme.of(context).brightness ==Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -57,14 +56,17 @@ class AppShell extends StatelessWidget {
           IconButton(
             tooltip: 'Theme',
             onPressed: () {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Dark mode toggle coming in Phase 4B',
-                  ),
-                ),
+              final notifier =
+              ProviderScope.containerOf(
+                context,
+              ).read(
+                themeModeProvider.notifier,
               );
+
+              notifier.state =
+              isDark
+                  ? ThemeMode.light
+                  : ThemeMode.dark;
             },
             icon: Icon(
               isDark

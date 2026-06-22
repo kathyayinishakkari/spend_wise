@@ -77,7 +77,7 @@ class BudgetPage extends ConsumerWidget {
                       const LinearGradient(
                         colors: [
                           Color(
-                            0xFF0F172A,
+                            0xFF1E3A8A,
                           ),
                           Color(
                             0xFF1E293B,
@@ -231,7 +231,7 @@ class BudgetPage extends ConsumerWidget {
                             ),
                             subtitle:
                             const Text(
-                              'Budget locked for this month',
+                               'Expected budget for current month',
                             ),
                             trailing:
                             Text(
@@ -242,46 +242,6 @@ class BudgetPage extends ConsumerWidget {
                                 FontWeight.bold,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(
-                    height: 16,
-                  ),
-
-                  Card(
-                    child: Padding(
-                      padding:
-                      const EdgeInsets
-                          .all(20),
-                      child: Column(
-                        children: const [
-                          Icon(
-                            Icons.lock,
-                            size: 40,
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          Text(
-                            'Budget Lock Enabled',
-                            style:
-                            TextStyle(
-                              fontWeight:
-                              FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Monthly budgets cannot be edited after they are saved.',
-                            textAlign:
-                            TextAlign
-                                .center,
                           ),
                         ],
                       ),

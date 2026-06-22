@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:expense_tracker_app/src/features/budget/presentation/providers/budget_month_close_provider.dart';
 
 Future<ProviderContainer> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,18 @@ Future<ProviderContainer> bootstrap() async {
   } catch (error, stackTrace) {
     debugPrint('Anonymous login bootstrap error: $error');
     debugPrintStack(stackTrace: stackTrace);
+  }
+  try {
+    await container.read(
+      closePastMonthsProvider.future,
+    );
+  } catch (error, stackTrace) {
+    debugPrint(
+      'Budget month close error: $error',
+    );
+    debugPrintStack(
+      stackTrace: stackTrace,
+    );
   }
 
   try {
