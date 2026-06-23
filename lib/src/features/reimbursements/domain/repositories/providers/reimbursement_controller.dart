@@ -33,23 +33,16 @@ class ReimbursementController {
     ReimbursementModel(
       id: reimbursement.id,
       userId: reimbursement.userId,
-      expenseId:
-      reimbursement.expenseId,
-      totalAmount:
-      reimbursement.totalAmount,
-      receivedAmount:
-      updatedReceived,
+      expenseId: reimbursement.expenseId,
+      totalAmount: reimbursement.totalAmount,
+      receivedAmount: updatedReceived,
       status: status,
-      personName:
-      reimbursement.personName,
-      source:
-      reimbursement.source,
-      createdAt:
-      reimbursement.createdAt,
-      settledAt:
-      status ==
-          ReimbursementStatus
-              .completed
+      personName: reimbursement.personName,
+      source: reimbursement.source,
+      monthKey: reimbursement.monthKey,
+      createdAt: reimbursement.createdAt,
+      settledAt: status ==
+          ReimbursementStatus.completed
           ? DateTime.now()
           : null,
     );

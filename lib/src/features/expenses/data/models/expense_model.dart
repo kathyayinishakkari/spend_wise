@@ -14,7 +14,6 @@ class ExpenseModel extends Expense {
     super.description,
     super.myShare,
     super.personName,
-    super.reimbursementId,
     super.createdAt,
     super.updatedAt,
   });
@@ -29,7 +28,6 @@ class ExpenseModel extends Expense {
     'expenseType': expenseType.name,
     'personName': personName,
     'myShare': myShare,
-    'reimbursementId': reimbursementId,
     'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
     'updatedAt': FieldValue.serverTimestamp(),
   };
@@ -47,7 +45,6 @@ class ExpenseModel extends Expense {
       expenseType: ExpenseType.values.byName(data['expenseType'] as String),
       personName:data['personName'] as String?,
       myShare:(data['myShare'] as num?)?.toDouble(),
-      reimbursementId: data['reimbursementId'] as String?,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
     );

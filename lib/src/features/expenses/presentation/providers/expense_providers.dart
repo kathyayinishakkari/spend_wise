@@ -13,6 +13,7 @@ import 'package:expense_tracker_app/src/features/reimbursements/data/models/reim
 
 import 'package:expense_tracker_app/src/features/reimbursements/domain/repositories/providers/reimbursement_providers.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 final expenseRemoteDataSourceProvider =
 Provider<ExpenseRemoteDataSource>((ref) => ExpenseRemoteDataSource(ref.watch(firestoreProvider)));
@@ -32,66 +33,86 @@ class ExpenseFormController {
   ExpenseFormController(this.ref);
   final Ref ref;
 
-  Future<void> saveExpense(
-      ExpenseModel expense,
-      ) async {
-    await ref
-        .read(
-      expenseRepositoryProvider,
-    )
-        .addExpense(
-      expense,
-    );
+  Future<void> saveExpense(ExpenseModel expense,) async {
 
-    if (expense.expenseType ==
-        ExpenseType.personal ||
-        expense.personName == null) {
+    // PERSONAL EXPENSE
+    if (expense.expenseType == ExpenseType.personal) {
+      await ref
+          .read(expenseRepositoryProvider)
+          .addExpense(expense);
+
       return;
     }
 
-    double reimbursementAmount;
+    // SHARED EXPENSE
+    if (expense.expenseType == ExpenseType.shared) {
 
-    if (expense.expenseType ==
-        ExpenseType.shared) {
-      reimbursementAmount =
-      (expense.myShare == null)
-          ? 0
-          : expense.amount -
-          expense.myShare!;
-    } else {
-      reimbursementAmount =
-          expense.amount;
+      final sharedExpense = ExpenseModel(
+        id: expense.id,
+        userId: expense.userId,
+        amount: expense.myShare ?? 0,
+        category: expense.category,
+        paymentMethod: expense.paymentMethod,
+        dateTime: expense.dateTime,
+        expenseType: expense.expenseType,
+        personName: expense.personName,
+        myShare: expense.myShare,
+        description: expense.description,
+        createdAt: expense.createdAt,
+        updatedAt: expense.updatedAt,
+      );
+
+      await ref
+          .read(expenseRepositoryProvider)
+          .addExpense(sharedExpense);
+
+      final reimbursementAmount =
+          expense.amount - (expense.myShare ?? 0);
+
+      final reimbursement = ReimbursementModel(
+        id: const Uuid().v4(),
+        userId: expense.userId,
+        expenseId: expense.id,
+        totalAmount: reimbursementAmount,
+        receivedAmount: 0,
+        status: ReimbursementStatus.pending,
+        personName: expense.personName!,
+        source: ReimbursementSource.shared,
+        monthKey:
+        '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}',
+        createdAt: DateTime.now(),
+      );
+
+      await ref
+          .read(reimbursementRepositoryProvider)
+          .addReimbursement(reimbursement);
+
+      return;
     }
 
-    final reimbursement =
-    ReimbursementModel(
-      id: const Uuid().v4(),
-      userId: expense.userId,
-      expenseId: expense.id,
-      totalAmount:
-      reimbursementAmount,
-      receivedAmount: 0,
-      status:
-      ReimbursementStatus.pending,
-      personName:
-      expense.personName!,
-      source:
-      expense.expenseType ==
-          ExpenseType.shared
-          ? ReimbursementSource
-          .shared
-          : ReimbursementSource
-          .reimbursement,
-      createdAt: DateTime.now(),
-    );
+    // REIMBURSEMENT EXPENSE
+    if (expense.expenseType == ExpenseType.reimbursement) {
 
-    await ref
-        .read(
-      reimbursementRepositoryProvider,
-    )
-        .addReimbursement(
-      reimbursement,
-    );
+      final reimbursement = ReimbursementModel(
+        id: const Uuid().v4(),
+        userId: expense.userId,
+        expenseId: expense.id,
+        totalAmount: expense.amount,
+        receivedAmount: 0,
+        status: ReimbursementStatus.pending,
+        personName: expense.personName!,
+        source: ReimbursementSource.reimbursement,
+        monthKey:
+        '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}',
+        createdAt: DateTime.now(),
+      );
+
+      await ref
+          .read(reimbursementRepositoryProvider)
+          .addReimbursement(reimbursement);
+
+      return;
+    }
   }
 
   String generateId() => const Uuid().v4();

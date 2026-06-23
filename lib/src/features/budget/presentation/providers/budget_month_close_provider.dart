@@ -19,8 +19,7 @@ FutureProvider<void>((ref) async {
   final now = ref.watch(currentDateProvider);
   //final now = DateTime(2026, 7, 3);
 
-  final currentMonthKey =
-      '${now.year}-${now.month.toString().padLeft(2, '0')}';
+  final currentMonthKey = '${now.year}-${now.month.toString().padLeft(2, '0')}';
 
   final budgets =
   await firestore

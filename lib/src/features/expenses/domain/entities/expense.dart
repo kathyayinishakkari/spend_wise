@@ -12,7 +12,6 @@ class Expense {
     this.description,
     this.myShare,
     this.personName,
-    this.reimbursementId,
     this.createdAt,
     this.updatedAt,
   });
@@ -26,7 +25,6 @@ class Expense {
   final DateTime dateTime;
   final ExpenseType expenseType;
   final String? personName;
-  final String? reimbursementId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final double? myShare;

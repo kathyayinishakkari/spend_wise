@@ -10,6 +10,7 @@ class Reimbursement {
     required this.status,
     required this.personName,
     required this.source,
+    required this.monthKey,
     required this.createdAt,
     this.settledAt,
   });
@@ -25,7 +26,7 @@ class Reimbursement {
   final String personName;
 
   final ReimbursementSource source;
-
+  final String monthKey;
   final DateTime createdAt;
 
   final DateTime? settledAt;

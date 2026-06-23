@@ -12,6 +12,7 @@ class ReimbursementModel extends Reimbursement {
     required super.status,
     required super.personName,
     required super.source,
+    required super.monthKey,
     required super.createdAt,
     super.settledAt,
   });
@@ -24,6 +25,7 @@ class ReimbursementModel extends Reimbursement {
     'status': status.name,
     'personName': personName,
     'source': source.name,
+    'monthKey': monthKey,
     'createdAt': Timestamp.fromDate(createdAt),
     'settledAt':
     settledAt == null
@@ -53,8 +55,11 @@ class ReimbursementModel extends Reimbursement {
       ReimbursementSource.values.byName(
         data['source'] as String,
       ),
+      monthKey:
+      data['monthKey'] as String,
       createdAt:
-      (data['createdAt'] as Timestamp).toDate(),
+      (data['createdAt'] as Timestamp)
+          .toDate(),
       settledAt:
       (data['settledAt'] as Timestamp?)
           ?.toDate(),

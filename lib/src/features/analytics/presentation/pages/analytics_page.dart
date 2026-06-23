@@ -43,7 +43,7 @@ class AnalyticsPage extends ConsumerWidget {
       analyticsSummaryProvider,
     );
     return AppShell(
-    currentIndex: 2,
+    currentIndex: 3,
     title: 'Analytics',
     child: analytics.when(
     data: (data) => ListView(

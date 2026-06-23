@@ -28,9 +28,9 @@ class AppShell extends ConsumerWidget {
     LucideIcons.receipt,
     ),
     (
-    'Analytics',
-    '/analytics',
-    LucideIcons.chartPie,
+    'Paybacks',
+    '/reimbursements',
+    Icons.payments_rounded,
     ),
     (
     'More',

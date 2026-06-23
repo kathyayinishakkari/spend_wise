@@ -4,6 +4,7 @@ import 'package:expense_tracker_app/src/features/auth/presentation/providers/aut
 import 'package:expense_tracker_app/src/features/expenses/data/models/expense_model.dart';
 import 'package:expense_tracker_app/src/features/expenses/presentation/providers/expense_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExpensesPage extends ConsumerWidget {
@@ -205,7 +206,7 @@ class ExpensesPage extends ConsumerWidget {
                             const SizedBox(height: 6),
 
                             Text(
-                              '${expense.dateTime.day}/${expense.dateTime.month}/${expense.dateTime.year}',
+                              DateFormat('dd MMM yyyy',).format(expense.dateTime,),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Theme.of(context)
@@ -296,13 +297,17 @@ class ExpensesPage extends ConsumerWidget {
   }
 }
 class ExpenseFormSheet extends ConsumerStatefulWidget {
-  const ExpenseFormSheet({super.key});
+  const ExpenseFormSheet({
+    super.key,
+    this.initialDateTime,
+  });
+
+  final DateTime? initialDateTime;
 
   @override
   ConsumerState<ExpenseFormSheet> createState() =>
       _ExpenseFormSheetState();
 }
-
 class _ExpenseFormSheetState
     extends ConsumerState<ExpenseFormSheet> {
   final _formKey = GlobalKey<FormState>();
@@ -328,8 +333,12 @@ class _ExpenseFormSheetState
   ExpenseType _expenseType =
       ExpenseType.personal;
 
-  DateTime _selectedDateTime =
-  DateTime.now();
+  late DateTime _selectedDateTime;
+  @override
+  void initState() {
+    super.initState();
+    _selectedDateTime = widget.initialDateTime ?? DateTime.now();
+  }
 
   @override
   void dispose() {
@@ -608,9 +617,7 @@ class _ExpenseFormSheetState
               ),
               title:
               const Text('Date & Time'),
-              subtitle: Text(
-                _selectedDateTime
-                    .toString(),
+              subtitle: Text(DateFormat('dd MMM yyyy • hh:mm a',).format(_selectedDateTime,),
               ),
               onTap: () async {
                 final date =
@@ -662,65 +669,32 @@ class _ExpenseFormSheetState
                 if (!_formKey.currentState!.validate()) {
                   return;
                 }
-
-                final user =
-                ref.read(currentUserProvider);
-
+                final user =ref.read(currentUserProvider);
                 if (user == null) {
                   return;
                 }
-
-                final controller = ref.read(
-                  expenseFormControllerProvider,
-                );
-
-                final totalAmount =
-                double.parse(
-                  _amountController.text,
-                );
-
+                final controller = ref.read(expenseFormControllerProvider,);
+                final totalAmount =double.parse(_amountController.text,);
                 double storedExpenseAmount;
 
                 switch (_expenseType) {
-                  case ExpenseType.personal:
-                    storedExpenseAmount =
-                        totalAmount;
-                    break;
+                  case ExpenseType.personal:storedExpenseAmount =totalAmount; break;
 
-                  case ExpenseType.shared:
-                    storedExpenseAmount =
-                        double.parse(
-                          _myShareController.text,
-                        );
-                    break;
+                  case ExpenseType.shared: storedExpenseAmount = totalAmount; break;
 
-                  case ExpenseType.reimbursement:
-                    storedExpenseAmount = 0;
-                    break;
+                  case ExpenseType.reimbursement:storedExpenseAmount = totalAmount; break;
                 }
 
                 final expense =
                 ExpenseModel(
                   id: controller.generateId(),
-
                   userId: user.uid,
-
-                  amount:
-                  storedExpenseAmount,
-
+                  amount:storedExpenseAmount,
                   category: _category,
-
-                  paymentMethod:
-                  _paymentMethod,
-
-                  dateTime:
-                  _selectedDateTime,
-
-                  expenseType:
-                  _expenseType,
-
-                  personName:
-                  _personController
+                  paymentMethod:_paymentMethod,
+                  dateTime:_selectedDateTime,
+                  expenseType:_expenseType,
+                  personName:_personController
                       .text
                       .trim()
                       .isEmpty
@@ -728,15 +702,7 @@ class _ExpenseFormSheetState
                       : _personController
                       .text
                       .trim(),
-
-                  myShare:
-                  _expenseType ==
-                      ExpenseType
-                          .shared
-                      ? double.parse(
-                    _myShareController
-                        .text,
-                  )
+                  myShare: _expenseType == ExpenseType.shared? double.parse(_myShareController .text,)
                       : null,
 
                   description:

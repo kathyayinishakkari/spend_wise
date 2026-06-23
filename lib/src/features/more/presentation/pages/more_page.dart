@@ -1,6 +1,7 @@
 import 'package:expense_tracker_app/src/core/widgets/app_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
@@ -30,9 +31,9 @@ class MorePage extends StatelessWidget {
           const SizedBox(height: 12),
 
           _MenuCard(
-            title: 'Reimbursements',
-            icon: Icons.payments_rounded,
-            onTap: () => context.push('/reimbursements'),
+            title: 'Analytics',
+            icon:  LucideIcons.chartPie,
+            onTap: () => context.push('/analytics'),
           ),
         ],
       ),

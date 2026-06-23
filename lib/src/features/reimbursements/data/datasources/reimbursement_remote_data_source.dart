@@ -20,6 +20,10 @@ class ReimbursementRemoteDataSource {
   watchReimbursements(
       String userId,
       ) {
+    print(
+      'WATCHING -> users/$userId/reimbursements',
+    );
+
     return _collection(userId)
         .orderBy(
       'createdAt',
@@ -27,12 +31,18 @@ class ReimbursementRemoteDataSource {
     )
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs
-          .map(
-        ReimbursementModel
-            .fromFirestore,
-      )
-          .toList(),
+          (snapshot) {
+        print(
+          'DOC COUNT = ${snapshot.docs.length}',
+        );
+
+        return snapshot.docs
+            .map(
+          ReimbursementModel
+              .fromFirestore,
+        )
+            .toList();
+      },
     );
   }
 
