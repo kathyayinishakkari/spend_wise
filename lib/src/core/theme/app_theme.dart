@@ -17,6 +17,20 @@ class AppTheme {
 
   static const Color darkText = Color(0xFF1E3A8A);
   static const Color mutedText = Color(0xFF64748B);
+  // Analytics
+  static const Color analyticsPrimary = Color(0xFF06B6D4);
+  static const Color analyticsSecondary = Color(0xFF22D3EE);
+
+// Category Colors
+  static const Color food = Color(0xFF06B6D4);
+  static const Color transport = Color(0xFF0EA5E9);
+  static const Color shopping = Color(0xFF8B5CF6);
+  static const Color bills = Color(0xFFF97316);
+  static const Color health = Color(0xFF22C55E);
+  static const Color travel = Color(0xFF14B8A6);
+  static const Color entertainment = Color(0xFFEC4899);
+  static const Color education = Color(0xFF6366F1);
+  static const Color other = Color(0xFF94A3B8);
 
   static ThemeData light() => _theme(Brightness.light);
 
