@@ -1,3 +1,7 @@
+import 'package:expense_tracker_app/src/core/widgets/app_refresh_indicator.dart';
+import 'package:expense_tracker_app/src/features/budget/presentation/providers/budget_providers.dart';
+import 'package:expense_tracker_app/src/features/expenses/presentation/providers/expense_providers.dart';
+import 'package:expense_tracker_app/src/features/reimbursements/domain/repositories/providers/reimbursement_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:expense_tracker_app/src/core/theme/theme_provider.dart';
@@ -79,43 +83,48 @@ class AppShell extends ConsumerWidget {
         ],
       ),
 
-      body: child,
+      body: AppRefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(expensesProvider);
+          ref.invalidate(currentMonthBudgetProvider);
+          ref.invalidate(reimbursementsProvider);
+
+          await Future.wait([
+            ref.read(expensesProvider.future),
+            ref.read(currentMonthBudgetProvider.future),
+            ref.read(reimbursementsProvider.future),
+          ]);
+        },
+        child: child,
+      ),
 
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.fromLTRB(
-          12,
-          0,
-          12,
-          12,
+        margin: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
         child: ClipRRect(
-          borderRadius:
-          BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24),
           child: NavigationBar(
             selectedIndex: currentIndex,
-              labelBehavior:NavigationDestinationLabelBehavior.alwaysShow,
-
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
             onDestinationSelected: (index) {
-              context.go(
-                _items[index].$2,
-              );
+              context.go(_items[index].$2);
             },
-
             destinations: _items
                 .map(
-                  (item) =>
-                  NavigationDestination(
-                    icon: Icon(
-                      item.$3,
-                      color: Colors.grey,
-                    ),
-                    selectedIcon: Icon(
-                      item.$3,
-                      color: Colors.white,
-                    ),
+                  (item) => NavigationDestination(
+                    icon: Icon(item.$3),
                     label: item.$1,
                   ),
-            )
+                )
                 .toList(),
           ),
         ),

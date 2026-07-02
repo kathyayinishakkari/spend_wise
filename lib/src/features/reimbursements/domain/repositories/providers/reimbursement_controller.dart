@@ -3,6 +3,7 @@ import 'package:expense_tracker_app/src/features/reimbursements/data/models/reim
 import 'package:expense_tracker_app/src/features/reimbursements/domain/entities/reimbursement.dart';
 import 'package:expense_tracker_app/src/features/reimbursements/domain/repositories/providers/reimbursement_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:expense_tracker_app/src/core/services/notification_service.dart';
 
 final reimbursementControllerProvider =
 Provider(
@@ -54,6 +55,8 @@ class ReimbursementController {
         .updateReimbursement(
       updated,
     );
+
+    await NotificationService.instance.onPaybackReceived(reimbursement.personName, amountReceived);
   }
 
   Future<void> deleteReimbursement(

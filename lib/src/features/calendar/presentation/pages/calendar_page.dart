@@ -1,6 +1,7 @@
 import 'package:expense_tracker_app/src/core/provider/date_provider.dart';
 import 'package:expense_tracker_app/src/core/widgets/app_shell.dart';
-import 'package:expense_tracker_app/src/features/expenses/presentation/pages/expenses_page.dart';
+import 'package:expense_tracker_app/src/core/widgets/app_refresh_indicator.dart';
+import 'package:expense_tracker_app/src/features/expenses/presentation/widgets/expense_form_sheet.dart';
 import 'package:expense_tracker_app/src/features/expenses/presentation/providers/expense_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +21,8 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    final expenses = ref.watch(expensesProvider).value ?? const [];
+    final expensesAsync = ref.watch(expensesProvider);
+    final expenses = expensesAsync.value ?? const [];
 
     final selectedExpenses = expenses
         .where(
@@ -35,103 +37,141 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
       title: 'Calendar',
       child: ListView(
         padding: const EdgeInsets.all(20),
+        physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: TableCalendar(
-                firstDay: DateTime.utc(2020),
-                lastDay: DateTime.utc(2100),
-                focusedDay: _focusedDay,
-                selectedDayPredicate: (day) =>
-                    isSameDay(_selectedDay, day),
-                eventLoader: (day) => expenses
-                    .where(
-                      (expense) =>
-                      isSameDay(expense.dateTime, day),
-                )
-                    .toList(),
-                onDaySelected: (selected, focused) {
-                  setState(() {
-                    _selectedDay = selected;
-                    _focusedDay = focused;
-                  });
-                },
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          FilledButton.icon(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                showDragHandle: true,
-                builder: (_) => ExpenseFormSheet(
-                  initialDateTime:
-                  _selectedDay ??
-                      ref.watch(currentDateProvider),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-            label: const Text('Add Expense'),
-          ),
-
-          const SizedBox(height: 20),
-
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(18),
-              child: Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
-                children: [
-                  const Text('Selected Date'),
-
-                  const SizedBox(height: 8),
-                  Text(
-                    _selectedDay == null
-                        ? ''
-                        : DateFormat(
-                      'dd MMM yyyy',
-                    ).format(
-                      _selectedDay!,
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: TableCalendar(
+                  firstDay: DateTime.utc(2020),
+                  lastDay: DateTime.utc(2100),
+                  focusedDay: _focusedDay,
+                  headerStyle: const HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                  ),
+                  calendarStyle: CalendarStyle(
+                    markersMaxCount: 1,
+                    markerSize: 6,
+                    markerDecoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      shape: BoxShape.circle,
                     ),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                    todayDecoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
+                      shape: BoxShape.circle,
+                    ),
+                    selectedDecoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      shape: BoxShape.circle,
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          ...selectedExpenses.map(
-                (expense) => Card(
-              child: ListTile(
-                leading: const Icon(
-                  Icons.receipt_long_rounded,
-                ),
-                title: Text(
-                  expense.category.name,
-                ),
-                subtitle: Text(
-                  expense.description ?? '',
-                ),
-                trailing: Text(
-                  '₹${expense.amount.toStringAsFixed(0)}',
+                  selectedDayPredicate: (day) =>
+                      isSameDay(_selectedDay, day),
+                  eventLoader: (day) => expenses
+                      .where(
+                        (expense) =>
+                        isSameDay(expense.dateTime, day),
+                  )
+                      .toList(),
+                  onDaySelected: (selected, focused) {
+                    setState(() {
+                      _selectedDay = selected;
+                      _focusedDay = focused;
+                    });
+                  },
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+
+            const SizedBox(height: 16),
+
+            FilledButton.icon(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  showDragHandle: true,
+                  builder: (_) => ExpenseFormSheet(
+                    initialDateTime:
+                    _selectedDay ??
+                        ref.watch(currentDateProvider),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add),
+              label: const Text('Add Expense'),
+            ),
+
+            const SizedBox(height: 20),
+
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment:
+                  CrossAxisAlignment.start,
+                  children: [
+                    const Text('Selected Date'),
+
+                    const SizedBox(height: 8),
+                    Text(
+                      _selectedDay == null
+                          ? ''
+                          : DateFormat(
+                        'dd MMM yyyy',
+                      ).format(
+                        _selectedDay!,
+                      ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            ...selectedExpenses.map(
+              (expense) => Card(
+                margin: const EdgeInsets.only(bottom: 12),
+                child: ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.receipt_long_rounded,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      size: 20,
+                    ),
+                  ),
+                  title: Text(
+                    expense.category.name[0].toUpperCase() +
+                        expense.category.name.substring(1),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: expense.description != null
+                      ? Text(expense.description!)
+                      : null,
+                  trailing: Text(
+                    '₹${expense.amount.toStringAsFixed(0)}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
     );
   }
 }

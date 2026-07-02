@@ -1,4 +1,5 @@
 import 'package:expense_tracker_app/src/core/services/firebase_providers.dart';
+import 'package:expense_tracker_app/src/core/services/notification_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,40 +9,22 @@ Provider<FlutterLocalNotificationsPlugin>((ref) => FlutterLocalNotificationsPlug
 
 final notificationInitializerProvider = FutureProvider<void>((ref) async {
   final messaging = ref.watch(firebaseMessagingProvider);
-  final local = ref.watch(flutterLocalNotificationsPluginProvider);
-
+  
+  await NotificationService.instance.initialize();
+  
   await messaging.requestPermission();
   await messaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
 
-  const channel = AndroidNotificationChannel(
-    'high_importance_channel',
-    'High Importance Notifications',
-    description: 'Budget and reimbursement alerts',
-    importance: Importance.max,
-  );
-
-  await local
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
+  // Initial data check
+  await NotificationService.instance.checkAll(ref);
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     final notification = message.notification;
-    final android = message.notification?.android;
-
-    if (notification != null && android != null) {
-      local.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'high_importance_channel',
-            'High Importance Notifications',
-            channelDescription: 'Budget and reimbursement alerts',
-            importance: Importance.max,
-            priority: Priority.high,
-          ),
-        ),
+    if (notification != null) {
+      NotificationService.instance.showNotification(
+        id: notification.hashCode,
+        title: notification.title ?? '',
+        body: notification.body ?? '',
       );
     }
   });

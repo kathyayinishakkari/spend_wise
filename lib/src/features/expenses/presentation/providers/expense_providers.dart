@@ -42,6 +42,7 @@ class ExpenseFormController {
           .read(expenseRepositoryProvider)
           .addExpense(expense);
 
+      await NotificationService.instance.checkLargeExpense(expense.amount);
       await NotificationService.instance.checkBudgetNotifications(ref);
 
       return;
@@ -69,6 +70,7 @@ class ExpenseFormController {
           .read(expenseRepositoryProvider)
           .addExpense(sharedExpense);
 
+      await NotificationService.instance.checkLargeExpense(sharedExpense.amount);
       await NotificationService.instance.checkBudgetNotifications(ref);
 
       final reimbursementAmount =

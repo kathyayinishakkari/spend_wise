@@ -1,6 +1,9 @@
 import 'package:expense_tracker_app/src/core/widgets/app_shell.dart';
+import 'package:expense_tracker_app/src/core/widgets/app_refresh_indicator.dart';
 import 'package:expense_tracker_app/src/features/budget/presentation/providers/budget_providers.dart';
 import 'package:expense_tracker_app/src/features/dashboard/presentation/providers/dashboard_providers.dart';
+import 'package:expense_tracker_app/src/features/expenses/presentation/providers/expense_providers.dart';
+import 'package:expense_tracker_app/src/features/reimbursements/domain/repositories/providers/reimbursement_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:expense_tracker_app/src/core/theme/app_theme.dart';
@@ -43,6 +46,7 @@ class _DashboardPageState
         data: (data) {
           return ListView(
             padding: const EdgeInsets.all(20),
+            physics: const AlwaysScrollableScrollPhysics(),
             children: [
               Container(
                 padding:
@@ -113,7 +117,7 @@ class _DashboardPageState
                   const SizedBox(width: 12),
                   Expanded(
                     child: _MetricCard(
-                      title: 'Pending',
+                      title: 'Paybacks',
                       value:'₹${data.pendingReimbursements.toStringAsFixed(0)}',
                       icon: Icons.payments_rounded,
                     ),
@@ -266,35 +270,39 @@ class _MetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       child: Padding(
-        padding:
-        const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(18),
         child: Column(
-          crossAxisAlignment:
-          CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              icon,
-              size: 28,
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 14,
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(
+                icon,
+                size: 24,
+                color: theme.colorScheme.primary,
               ),
             ),
-            const SizedBox(
-              height: 8,
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                fontWeight: FontWeight.w500,
+              ),
             ),
+            const SizedBox(height: 8),
             Text(
               value,
               style: const TextStyle(
-                fontWeight:
-                FontWeight.bold,
+                fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
             ),

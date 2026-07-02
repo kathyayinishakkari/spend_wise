@@ -1,3 +1,4 @@
+import 'package:expense_tracker_app/src/core/theme/app_theme.dart';
 import 'package:expense_tracker_app/src/core/constants/app_enums.dart';
 import 'package:expense_tracker_app/src/core/widgets/app_shell.dart';
 import 'package:expense_tracker_app/src/features/reimbursements/domain/entities/reimbursement.dart';
@@ -137,19 +138,19 @@ class _SummaryCard
     return Container(
       padding:
       const EdgeInsets.all(
-        20,
+        24,
       ),
       decoration:
       BoxDecoration(
         borderRadius:
         BorderRadius.circular(
-          24,
+          28,
         ),
         gradient:
         const LinearGradient(
           colors: [
-            Color(0xFF10B981),
-            Color(0xFF34D399),
+            AppTheme.paybackGradientStart,
+            AppTheme.paybackGradientEnd,
           ],
         ),
       ),

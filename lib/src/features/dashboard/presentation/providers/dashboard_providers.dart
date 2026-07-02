@@ -3,6 +3,7 @@ import 'package:expense_tracker_app/src/features/expenses/presentation/providers
 import 'package:expense_tracker_app/src/features/reimbursements/domain/entities/reimbursement.dart';
 import 'package:expense_tracker_app/src/core/provider/date_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:expense_tracker_app/src/features/reimbursements/domain/repositories/providers/reimbursement_providers.dart';
 
 class DashboardSummary {
   const DashboardSummary({
@@ -22,71 +23,51 @@ class DashboardSummary {
   final double pendingReimbursements;
 }
 
-final reimbursementsStateProvider =
-StateProvider<List<Reimbursement>>(
-      (ref) => const [],
-);
+final dashboardSummaryProvider = Provider<AsyncValue<DashboardSummary>>((ref) {
+  final expensesAsync = ref.watch(expensesProvider);
+  final budgetAsync = ref.watch(currentMonthBudgetProvider);
+  final reimbursementsAsync = ref.watch(reimbursementsProvider);
 
-final dashboardSummaryProvider =
-Provider<AsyncValue<DashboardSummary>>(
-      (ref) {
-    final expensesAsync =
-    ref.watch(expensesProvider);
+  // Combine multiple AsyncValues into one
+  if (expensesAsync.isLoading || budgetAsync.isLoading || reimbursementsAsync.isLoading) {
+    return const AsyncLoading();
+  }
 
-    final budgetAsync =
-    ref.watch(currentMonthBudgetProvider);
+  if (expensesAsync.hasError) {
+    return AsyncError(expensesAsync.error!, expensesAsync.stackTrace!);
+  }
+  if (budgetAsync.hasError) {
+    return AsyncError(budgetAsync.error!, budgetAsync.stackTrace!);
+  }
+  if (reimbursementsAsync.hasError) {
+    return AsyncError(reimbursementsAsync.error!, reimbursementsAsync.stackTrace!);
+  }
 
-    final reimbursements =
-    ref.watch(
-      reimbursementsStateProvider,
-    );
+  final expenses = expensesAsync.requireValue;
+  final budget = budgetAsync.requireValue;
+  final reimbursements = reimbursementsAsync.value ?? const <Reimbursement>[];
+  
+  final now = ref.watch(currentDateProvider);
 
-    return expensesAsync.whenData(
-          (expenses) {
-        final now = ref.watch(currentDateProvider);
+  final monthly = expenses.where(
+    (e) => e.dateTime.year == now.year && e.dateTime.month == now.month,
+  ).toList();
 
-        final monthly = expenses.where(
-              (e) =>
-          e.dateTime.year == now.year &&
-              e.dateTime.month == now.month,
-        ).toList();
+  final spend = monthly.fold<double>(0, (sum, e) => sum + e.amount);
 
-        final spend = monthly.fold<double>(
-          0,
-              (sum, e) => sum + e.amount,
-        );
+  final pending = reimbursements.fold<double>(
+    0,
+    (sum, r) => sum + (r.totalAmount - r.receivedAmount),
+  );
 
-        final pending =
-        reimbursements.fold<double>(
-          0,
-              (sum, r) =>
-          sum + r.pendingAmount,
-        );
+  final budgetAmount = budget?.amount ?? 0;
 
-        final budget =
-            budgetAsync.valueOrNull;
-
-        final budgetAmount =
-            budget?.amount ?? 0;
-
-        return DashboardSummary(
-          monthSpend: spend,
-          monthBudget: budgetAmount,
-          remainingBudget:
-          budgetAmount - spend,
-          dailyAverage:
-          monthly.isEmpty
-              ? 0
-              : spend / now.day,
-          utilization:
-          budgetAmount <= 0
-              ? 0
-              : (spend / budgetAmount)
-              .clamp(0.0, 1.0),
-          pendingReimbursements:
-          pending,
-        );
-      },
-    );
-  },
-);
+  return AsyncData(DashboardSummary(
+    monthSpend: spend,
+    monthBudget: budgetAmount,
+    remainingBudget: budgetAmount - spend,
+    dailyAverage: monthly.isEmpty ? 0 : spend / now.day,
+    utilization: budgetAmount <= 0 ? 0 : (spend / budgetAmount).clamp(0.0, 1.0),
+    pendingReimbursements: pending,
+  ));
+});
