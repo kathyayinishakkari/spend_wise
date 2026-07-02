@@ -8,6 +8,7 @@ import 'package:expense_tracker_app/src/features/expenses/domain/entities/expens
 import 'package:expense_tracker_app/src/features/expenses/domain/repositories/expense_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:expense_tracker_app/src/core/constants/app_enums.dart';
+import 'package:expense_tracker_app/src/core/services/notification_service.dart';
 
 import 'package:expense_tracker_app/src/features/reimbursements/data/models/reimbursement_model.dart';
 
@@ -41,6 +42,8 @@ class ExpenseFormController {
           .read(expenseRepositoryProvider)
           .addExpense(expense);
 
+      await NotificationService.instance.checkBudgetNotifications(ref);
+
       return;
     }
 
@@ -65,6 +68,8 @@ class ExpenseFormController {
       await ref
           .read(expenseRepositoryProvider)
           .addExpense(sharedExpense);
+
+      await NotificationService.instance.checkBudgetNotifications(ref);
 
       final reimbursementAmount =
           expense.amount - (expense.myShare ?? 0);

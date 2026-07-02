@@ -3,6 +3,7 @@ import 'package:expense_tracker_app/src/features/budget/presentation/providers/b
 import 'package:expense_tracker_app/src/features/dashboard/presentation/providers/dashboard_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:expense_tracker_app/src/core/theme/app_theme.dart';
 
 class DashboardPage extends ConsumerStatefulWidget {
   const DashboardPage({super.key});
@@ -52,88 +53,69 @@ class _DashboardPageState
                   gradient:
                   const LinearGradient(
                     colors: [
-                      Color(0xFF1E3A8A),
-                      Color(0xFF1E293B),
+                      AppTheme.dashboardGradientStart,
+                      AppTheme.dashboardGradientEnd,
                     ],
                   ),
                 ),
                 child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment:CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Total Spending',
                       style: TextStyle(
-                        color:
-                        Colors.white70,
+                        color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
                         fontSize: 16,
                       ),
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12,),
                     Text(
                       '₹${data.monthSpend.toStringAsFixed(0)}',
-                      style:
-                      const TextStyle(
-                        color:
-                        Colors.white,
+                      style:TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 34,
-                        fontWeight:
-                        FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
               ),
-
               const SizedBox(height: 20),
-
               Row(
                 children: [
                   Expanded(
                     child: _MetricCard(
                       title: 'Budget',
-                      value:
-                      '₹${data.monthBudget.toStringAsFixed(0)}',
-                      icon: Icons
-                          .account_balance_wallet_rounded,
+                      value:'₹${data.monthBudget.toStringAsFixed(0)}',
+                      icon: Icons.account_balance_wallet_rounded,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: _MetricCard(
                       title: 'Remaining',
-                      value:
-                      '₹${data.remainingBudget.toStringAsFixed(0)}',
-                      icon: Icons
-                          .savings_rounded,
+                      value:'₹${data.remainingBudget.toStringAsFixed(0)}',
+                      icon: Icons.savings_rounded,
                     ),
                   ),
                 ],
               ),
-
               const SizedBox(height: 12),
-
               Row(
                 children: [
                   Expanded(
                     child: _MetricCard(
                       title: 'Daily Avg',
-                      value:
-                      '₹${data.dailyAverage.toStringAsFixed(0)}',
-                      icon: Icons
-                          .trending_up_rounded,
+                      value:'₹${data.dailyAverage.toStringAsFixed(0)}',
+                      icon: Icons.trending_up_rounded,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: _MetricCard(
                       title: 'Pending',
-                      value:
-                      '₹${data.pendingReimbursements.toStringAsFixed(0)}',
-                      icon: Icons
-                          .payments_rounded,
+                      value:'₹${data.pendingReimbursements.toStringAsFixed(0)}',
+                      icon: Icons.payments_rounded,
                     ),
                   ),
                 ],
@@ -152,13 +134,9 @@ class _DashboardPageState
                     CrossAxisAlignment
                         .start,
                     children: [
-                      const Text(
+                      Text(
                         'Budget Utilization',
-                        style: TextStyle(
-                          fontWeight:
-                          FontWeight.w600,
-                          fontSize: 18,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(
                         height: 16,
@@ -215,16 +193,18 @@ class _DashboardPageState
       barrierDismissible: false,
       builder: (_) {
         return AlertDialog(
-          title: const Text(
+          title: Text(
             'Monthly Budget Required',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           content: Column(
             mainAxisSize:
             MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 'You must set a budget for the current month before using the app.\n\n'
                     'This can only be done once and cannot be changed later.',
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 16),
               TextField(

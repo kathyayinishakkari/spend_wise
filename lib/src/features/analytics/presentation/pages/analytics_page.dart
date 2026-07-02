@@ -48,8 +48,8 @@ class AnalyticsPage extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(24),
                 gradient: const LinearGradient(
                   colors: [
-                    AppTheme.analyticsPrimary,
-                    AppTheme.analyticsSecondary,
+                    AppTheme.analyticsGradientStart,
+                    AppTheme.analyticsGradientEnd,
                   ],
                 ),
               ),
@@ -159,7 +159,7 @@ class AnalyticsPage extends ConsumerWidget {
                           barRods: [
                             BarChartRodData(
                               toY: entry.value.value,
-                              color: AppTheme.analyticsPrimary,
+                              color: AppTheme.analyticsGradientStart,
                               width: 20,
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -184,7 +184,7 @@ class AnalyticsPage extends ConsumerWidget {
                         children: [
                           const Icon(
                             Icons.trending_up_rounded,
-                            color: AppTheme.analyticsPrimary,
+                            color: AppTheme.analyticsGradientStart,
                           ),
                           const SizedBox(height: 10),
                           const Text('Top Category'),
@@ -210,7 +210,7 @@ class AnalyticsPage extends ConsumerWidget {
                         children: [
                           const Icon(
                             Icons.calendar_month_rounded,
-                            color: AppTheme.analyticsPrimary,
+                            color: AppTheme.analyticsGradientStart,
                           ),
                           const SizedBox(height: 10),
                           const Text('Top Month'),

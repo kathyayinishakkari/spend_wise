@@ -2,6 +2,7 @@ import 'package:expense_tracker_app/src/core/widgets/app_shell.dart';
 import 'package:expense_tracker_app/src/features/budget/presentation/providers/budget_providers.dart';
 import 'package:expense_tracker_app/src/features/dashboard/presentation/providers/dashboard_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker_app/src/core/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BudgetPage extends ConsumerWidget {
@@ -33,33 +34,17 @@ class BudgetPage extends ConsumerWidget {
               ),
             );
           }
-
           return dashboardAsync.when(
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            error: (error, _) => Center(
-              child: Text(error.toString()),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator(),),
+            error: (error, _) => Center(child: Text(error.toString()),),
             data: (summary) {
-              final budgetAmount =
-                  budget.amount;
-
-              final spent =
-                  summary.monthSpend;
-
-              final remaining =
-                  budgetAmount - spent;
-
+              final budgetAmount =budget.amount;
+              final spent =summary.monthSpend;
+              final remaining =budgetAmount - spent;
               final progress =
-              budgetAmount <= 0
-                  ? 0.0
-                  : (spent / budgetAmount)
-                  .clamp(0.0, 1.0);
-
+              budgetAmount <= 0? 0.0: (spent / budgetAmount).clamp(0.0, 1.0);
               return ListView(
-                padding:
-                const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 children: [
                   Container(
                     padding:
@@ -73,15 +58,10 @@ class BudgetPage extends ConsumerWidget {
                           .circular(
                         28,
                       ),
-                      gradient:
-                      const LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [
-                          Color(
-                            0xFF1E3A8A,
-                          ),
-                          Color(
-                            0xFF1E293B,
-                          ),
+                          AppTheme.budgetGradientStart,
+                          AppTheme.budgetGradientEnd,
                         ],
                       ),
                     ),
@@ -90,27 +70,15 @@ class BudgetPage extends ConsumerWidget {
                       CrossAxisAlignment
                           .start,
                       children: [
-                        const Text(
-                          'Monthly Budget',
-                          style:
-                          TextStyle(
-                            color: Colors
-                                .white70,
-                          ),
+                         Text('Monthly Budget',
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),                          ),
                         ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          '₹${budgetAmount.toStringAsFixed(0)}',
+                        const SizedBox(height: 8,),
+                        Text('₹${budgetAmount.toStringAsFixed(0)}',
                           style:
-                          const TextStyle(
-                            color:
-                            Colors.white,
+                          TextStyle( color: Theme.of(context).colorScheme.onPrimary,
                             fontSize: 34,
-                            fontWeight:
-                            FontWeight
-                                .bold,
+                            fontWeight:FontWeight.bold,
                           ),
                         ),
                       ],
@@ -131,14 +99,9 @@ class BudgetPage extends ConsumerWidget {
                         CrossAxisAlignment
                             .start,
                         children: [
-                          const Text(
+                          Text(
                             'Budget Utilization',
-                            style:
-                            TextStyle(
-                              fontWeight:
-                              FontWeight
-                                  .w600,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(
                             height: 12,
@@ -188,60 +151,20 @@ class BudgetPage extends ConsumerWidget {
                     ],
                   ),
 
-                  const SizedBox(
-                    height: 24,
-                  ),
-
+                  const SizedBox(height: 24,),
                   Card(
                     child: Padding(
-                      padding:
-                      const EdgeInsets
-                          .all(20),
+                      padding:const EdgeInsets.all(20),
                       child: Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
+                        crossAxisAlignment:CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Current Month',
-                            style:
-                            TextStyle(
-                              fontWeight:
-                              FontWeight
-                                  .bold,
-                              fontSize:
-                              18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          ListTile(
-                            contentPadding:
-                            EdgeInsets
-                                .zero,
-                            leading:
-                            const Icon(
-                              Icons
-                                  .calendar_month_rounded,
-                            ),
-                            title: Text(
-                              budget
-                                  .monthKey,
-                            ),
-                            subtitle:
-                            const Text(
-                               'Expected budget for current month',
-                            ),
-                            trailing:
-                            Text(
-                              '₹${budgetAmount.toStringAsFixed(0)}',
-                              style:
-                              const TextStyle(
-                                fontWeight:
-                                FontWeight.bold,
-                              ),
-                            ),
+                          Text('Current Month',style: Theme.of(context).textTheme.titleMedium,),
+                          const SizedBox(height: 12,),
+                          ListTile(contentPadding:EdgeInsets.zero,
+                            leading:const Icon(Icons.calendar_month_rounded,),
+                            title: Text(budget.monthKey,),
+                            subtitle:const Text('Expected budget for current month',),
+                            trailing:Text('₹${budgetAmount.toStringAsFixed(0)}',style: Theme.of(context).textTheme.titleMedium,),
                           ),
                         ],
                       ),
@@ -272,20 +195,10 @@ class _StatCard extends StatelessWidget {
       child: Padding(
         padding:
         const EdgeInsets.all(18),
-        child: Column(
-          children: [
-            Text(title),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              value,
-              style:
-              const TextStyle(
-                fontWeight:
-                FontWeight.bold,
-                fontSize: 18,
-              ),
+        child: Column(children: [
+          Text(title,style: Theme.of(context).textTheme.bodyMedium,),
+            const SizedBox(height: 8,),
+            Text(value,style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
         ),
